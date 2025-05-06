@@ -1,38 +1,56 @@
-# AWS EBS Snapshot Cleanup Lambda Function
+# 🧹 AWS Lambda: EBS Snapshot Cleaner
 
-## Overview
+A Python AWS Lambda function that automatically deletes old and unused Amazon EBS snapshots to save costs and maintain a clean environment.
 
-This Lambda function is designed to clean up **unused** EBS snapshots in AWS. It does so by identifying snapshots that are no longer attached to active EC2 instances or are associated with unattached EBS volumes.
+---
 
-The function performs the following tasks:
+## ✅ Features
 
-1. Fetches all EBS snapshots created by the AWS account.
-2. Fetches all running EC2 instances.
-3. Checks if each snapshot is associated with an active EC2 instance.
-4. Deletes snapshots that are no longer associated with any volume or where the associated volume is not attached to any running instance.
+* Deletes EBS snapshots **older than 6 months**
+* Skips snapshots **used in AMIs**
+* Logs all actions and errors
+* Written in **Python using Boto3**
 
-## Prerequisites
+---
 
-* AWS account with the required permissions to describe EC2 instances, snapshots, and volumes.
-* Lambda function with permissions to use **EC2** services.
+##
 
-## How it Works
+---
 
-1. **EC2 Snapshots**: The function begins by fetching all EBS snapshots owned by the account.
-2. **Running EC2 Instances**: It then fetches the list of running EC2 instances.
-3. **Snapshot Deletion**:
+## 🧠 Technologies Used
 
-   * The function checks each snapshot to see if it is associated with an EBS volume.
-   * If the volume is not attached to any instance, the snapshot is deleted.
-   * If the volume is attached to a non-running instance or the volume itself doesn't exist (due to deletion), the snapshot is also deleted.
+* **AWS Lambda**
+* \*\*Python \*\*
+* **Boto3 (AWS SDK for Python)**
+* **Amazon EC2 & EBS**
 
-## Permissions Required
+---
 
-Ensure that the Lambda function has the following IAM permissions:
+## 🚀 How It Works
 
-* `ec2:DescribeSnapshots`
-* `ec2:DescribeInstances`
-* `ec2:DescribeVolumes`
-* `ec2:DeleteSnapshot`
+1. Fetches all snapshots and AMIs owned by your account.
+2. Skips snapshots that are part of an AMI.
+3. Deletes snapshots that are older than 6 months and not in use.
 
+---
 
+## 🔐 IAM Permissions Required
+
+Make sure your Lambda execution role has the following permissions:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:DescribeSnapshots",
+        "ec2:DescribeImages",
+        "ec2:DeleteSnapshot"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+```
