@@ -11,9 +11,6 @@ A Python AWS Lambda function that automatically deletes old and unused Amazon EB
 * Logs all actions and errors
 * Written in **Python using Boto3**
 
----
-
-##
 
 ---
 
